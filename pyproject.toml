@@ -1,0 +1,26 @@
+[project]
+name = "pmsystem"
+version = "0.1.0"
+description = "API-first workflow management system for human and agent collaboration."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+  "fastapi>=0.116.1",
+  "pydantic-settings>=2.10.1",
+  "python-multipart>=0.0.20",
+  "sqlalchemy>=2.0.43",
+  "uvicorn>=0.35.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "httpx>=0.28.1",
+  "pytest>=8.4.1",
+]
+
+[build-system]
+requires = ["setuptools>=80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["app*"]

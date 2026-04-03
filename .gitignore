@@ -1,0 +1,15 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+data/
+*.sqlite
+*.db
+
+ui/node_modules/
+ui/dist/
+
+pmsystem.egg-info/
+.claude/
