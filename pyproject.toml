@@ -1,5 +1,5 @@
 [project]
-name = "pmsystem"
+name = "justenufpm"
 version = "0.1.0"
 description = "API-first workflow management system for human and agent collaboration."
 readme = "README.md"
