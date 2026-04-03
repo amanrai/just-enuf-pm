@@ -18,8 +18,6 @@ The bet here is simpler:
 - make it easy to model projects, tasks, dependencies, comments, and lightweight metadata
 - leave room for humans and agents to collaborate in the same system
 
-If you want a heavy workflow engine, deep permissions model, or polished enterprise product surface, this is not that.
-
 If you want a hackable PM backend with clear primitives, you're in the right place.
 
 ## Opinionated Choices
