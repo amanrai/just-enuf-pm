@@ -4,6 +4,10 @@ Note: this project includes vibe-coded elements produced with Codex and Claude.
 
 Standalone, local-first PM system for people building agentic workflows and internal tools.
 
+This is meant to be a backend for a single-user system today. It is not designed for scale yet.
+
+It is also intentionally simple enough that you can vibe-code a personal Things 3 style app on top of it in about 30 minutes, and then keep growing that app into a much larger set of use cases over time.
+
 ## What You Are Signing Up For
 
 `just-enuf-pm` is intentionally not trying to be Jira, Linear, or some generalized enterprise work-management platform.
@@ -38,12 +42,19 @@ The main design choices are:
   - tasks can belong to a parent task
   - tasks can belong to both
 - directional dependencies
+  - tasks can declare blockers explicitly
   - task `B` can be blocked by task `A`
+  - blockers cannot be cyclic
+  - if task `B` blocks task `A`, then task `A` cannot also block task `B`
+  - more generally, dependency loops are not valid
+  - we think this dependency model is the real arbiter of workflow in the age of agents, because it gives you a durable structure for human oversight instead of burying control inside agent behavior
 - comments as a message bus
   - comments are not just human notes
   - they are part of the collaboration model between humans and agents
 - extensible metadata
   - projects and tasks can carry extra properties without forcing every new idea into the core schema
+  - almost everything that does not deserve to be a core primitive should be pushed into user-definable arbitrary properties instead
+  - this is a deliberate choice to avoid becoming too opinionated too early
 - soft deletes everywhere
   - destructive cleanup is not the default behavior
 
