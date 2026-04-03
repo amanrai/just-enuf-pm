@@ -6,8 +6,6 @@ Standalone, local-first PM system for people building agentic workflows and inte
 
 This is meant to be a backend for a single-user system today. It is not designed for scale yet.
 
-It is also intentionally simple enough that you can vibe-code a personal Things 3 style app on top of it in about 30 minutes, and then keep growing that app into a much larger set of use cases over time.
-
 ## What You Are Signing Up For
 
 `just-enuf-pm` is intentionally not trying to be Jira, Linear, or some generalized enterprise work-management platform.
@@ -146,3 +144,5 @@ When a project is created, these defaults are copied into that project as projec
 - [Architecture](docs/architecture.md)
 - [API Notes](docs/api.md)
 - [Product Decisions](docs/decisions.md)
+
+Just-Enuf-PM is also intentionally simple enough that you can vibe-code a personal Things 3 style app on top of it in about 30 minutes, and then keep growing that app into a much larger set of use cases over time.
