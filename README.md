@@ -1,5 +1,7 @@
 # just-enuf-pm
 
+Note: this project includes vibe-coded elements produced with Codex and Claude.
+
 API-first workflow management system for projects, tasks, dependencies, and comments.
 
 ## Stack
