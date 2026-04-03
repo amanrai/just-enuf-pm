@@ -1,4 +1,4 @@
-# PM System
+# just-enuf-pm
 
 API-first workflow management system for projects, tasks, dependencies, and comments.
 
