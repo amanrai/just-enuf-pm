@@ -20,9 +20,9 @@ The bet here is simpler:
 
 If you want a heavy workflow engine, deep permissions model, or polished enterprise product surface, this is not that.
 
-If you want a hackable PM backend with clear primitives, this is the point.
+If you want a hackable PM backend with clear primitives, you're in the right place.
 
-## Product Decisions
+## Opinionated Choices
 
 The main design choices are:
 
@@ -46,6 +46,9 @@ The main design choices are:
   - if task `B` blocks task `A`, then task `A` cannot also block task `B`
   - more generally, dependency loops are not valid
   - we think this dependency model is the real arbiter of workflow in the age of agents, because it gives you a durable structure for human oversight instead of burying control inside agent behavior
+- task-type behavior flags
+  - the schema already has behavior controls such as `allow_child_tasks`
+  - some of that enforcement is still TODO in application logic
 - comments as a message bus
   - comments are not just human notes
   - they are part of the collaboration model between humans and agents
@@ -69,7 +72,6 @@ The main design choices are:
 - project properties
 - task properties
 - project repo links
-- skill defaults
 
 ## What It Is Good At
 
