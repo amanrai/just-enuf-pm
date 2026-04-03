@@ -2,25 +2,87 @@
 
 Note: this project includes vibe-coded elements produced with Codex and Claude.
 
-API-first workflow management system for projects, tasks, dependencies, and comments.
+Standalone, local-first PM system for people building agentic workflows and internal tools.
+
+## What You Are Signing Up For
+
+`just-enuf-pm` is intentionally not trying to be Jira, Linear, or some generalized enterprise work-management platform.
+
+The bet here is simpler:
+
+- keep the backend small
+- keep the data model understandable
+- expose everything through an API
+- make it easy to model projects, tasks, dependencies, comments, and lightweight metadata
+- leave room for humans and agents to collaborate in the same system
+
+If you want a heavy workflow engine, deep permissions model, or polished enterprise product surface, this is not that.
+
+If you want a hackable PM backend with clear primitives, this is the point.
+
+## Product Decisions
+
+The main design choices are:
+
+- SQLite first
+  - simple local deployment
+  - easy backup, reset, and inspection
+- API first
+  - UI is a client, not the source of truth
+  - other systems can integrate directly against the backend
+- nested projects
+  - projects can contain subprojects
+  - hierarchy is a first-class concept
+- flexible task placement
+  - tasks can belong to a project
+  - tasks can belong to a parent task
+  - tasks can belong to both
+- directional dependencies
+  - task `B` can be blocked by task `A`
+- comments as a message bus
+  - comments are not just human notes
+  - they are part of the collaboration model between humans and agents
+- extensible metadata
+  - projects and tasks can carry extra properties without forcing every new idea into the core schema
+- soft deletes everywhere
+  - destructive cleanup is not the default behavior
+
+## Core Objects
+
+- projects
+- subprojects
+- tasks
+- task types
+- dependencies
+- comments
+- attachments
+- notes
+- project properties
+- task properties
+- project repo links
+- skill defaults
+
+## What It Is Good At
+
+- internal project and task tracking
+- agent-oriented workflows
+- lightweight orchestration context for other systems
+- local-first development and experimentation
+- cases where you want to understand and modify the backend yourself
+
+## What It Is Not Trying To Be
+
+- a full enterprise PM suite
+- a multi-tenant SaaS platform
+- a strict workflow engine
+- a product with a deeply abstracted auth and permissions model
+- a system that hides its data model behind a lot of ceremony
 
 ## Stack
 
 - FastAPI
 - SQLAlchemy
 - SQLite
-
-## Core Concepts
-
-- Projects can be nested.
-- Projects can have extensible project-level properties such as repository URLs.
-- Tasks can belong to a project, a parent task, or both.
-- Tasks can depend on many other tasks.
-- Task dependencies are directional: task `B` can be blocked by task `A`.
-- Comments form the message bus for humans and agents.
-- Authorship is recorded inline as `role + instance_key`, not as a durable actor registry.
-- Task types are configurable per project and seeded with sensible defaults.
-- Deletes are soft deletes everywhere.
 
 ## Quick Start
 
@@ -52,11 +114,11 @@ uvicorn app.main:app --reload
 ## Scripts
 
 - `python -m app.scripts.init_db`
-  Creates the schema and seeds default task type templates.
+  - creates the schema and seeds default task type templates
 - `python -m app.scripts.reset_db`
-  Deletes the SQLite database file and recreates schema + seed data.
+  - deletes the SQLite database file and recreates schema plus seed data
 - `python -m app.scripts.seed_defaults`
-  Reapplies seed data without dropping the database.
+  - reapplies seed data without dropping the database
 
 ## Seeded Defaults
 
