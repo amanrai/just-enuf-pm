@@ -20,7 +20,7 @@ class Settings(BaseSettings):
 
     model_config = SettingsConfigDict(
         env_prefix="PMSYSTEM_",
-        env_file=".env",
+        env_file="shareable.env",
         extra="ignore",
     )
 
