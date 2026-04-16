@@ -27,6 +27,7 @@ class ProjectRead(APIModel):
     name: str
     slug: str
     description_md: str | None
+    relative_repo_path: str | None = None
     created_by_role: str
     created_by_instance_key: str
     created_at: datetime

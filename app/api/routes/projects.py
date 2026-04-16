@@ -29,7 +29,7 @@ def create_project(payload: ProjectCreate, session: Session = Depends(get_sessio
 
 @router.get("/{project_id}", response_model=ProjectRead)
 def get_project(project_id: str, session: Session = Depends(get_session)):
-    return project_service.get_project(session, project_id)
+    return project_service.get_project_read(session, project_id)
 
 
 @router.patch("/{project_id}", response_model=ProjectRead)
