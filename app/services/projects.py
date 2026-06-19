@@ -10,21 +10,22 @@ from app.services.task_types import clone_templates_for_project
 from app.services.utils import new_id
 
 
-def _relative_repo_path_by_project_id(session: Session, project_ids: list[str]) -> dict[str, str]:
+def _repo_link_by_project_id(session: Session, project_ids: list[str]) -> dict[str, ProjectRepoLink]:
     if not project_ids:
         return {}
     links = session.scalars(select(ProjectRepoLink).where(ProjectRepoLink.project_id.in_(project_ids)))
-    return {link.project_id: f"repos/{link.repo_subpath}" for link in links}
+    return {link.project_id: link for link in links}
 
 
-def _serialize_project(project: Project, relative_repo_path: str | None = None) -> dict:
+def _serialize_project(project: Project, repo_link: ProjectRepoLink | None = None) -> dict:
     return {
         "id": project.id,
         "parent_project_id": project.parent_project_id,
         "name": project.name,
         "slug": project.slug,
         "description_md": project.description_md,
-        "relative_repo_path": relative_repo_path,
+        "relative_repo_path": f"repos/{repo_link.repo_subpath}" if repo_link else None,
+        "remote_repo_url": repo_link.remote_url if repo_link else None,
         "created_by_role": project.created_by_role,
         "created_by_instance_key": project.created_by_instance_key,
         "created_at": project.created_at,
@@ -34,8 +35,8 @@ def _serialize_project(project: Project, relative_repo_path: str | None = None) 
 
 def list_projects(session: Session) -> list[dict]:
     projects = list(session.scalars(active(select(Project).order_by(Project.created_at), Project)))
-    repo_paths = _relative_repo_path_by_project_id(session, [project.id for project in projects])
-    return [_serialize_project(project, repo_paths.get(project.id)) for project in projects]
+    repo_links = _repo_link_by_project_id(session, [project.id for project in projects])
+    return [_serialize_project(project, repo_links.get(project.id)) for project in projects]
 
 
 def get_project(session: Session, project_id: str) -> Project:
@@ -44,8 +45,8 @@ def get_project(session: Session, project_id: str) -> Project:
 
 def get_project_read(session: Session, project_id: str) -> dict:
     project = get_project(session, project_id)
-    repo_paths = _relative_repo_path_by_project_id(session, [project.id])
-    return _serialize_project(project, repo_paths.get(project.id))
+    repo_links = _repo_link_by_project_id(session, [project.id])
+    return _serialize_project(project, repo_links.get(project.id))
 
 
 def create_project(session: Session, payload: ProjectCreate) -> dict:
@@ -74,8 +75,8 @@ def update_project(session: Session, project_id: str, payload: ProjectUpdate) ->
         setattr(project, field, value)
     session.commit()
     session.refresh(project)
-    repo_paths = _relative_repo_path_by_project_id(session, [project.id])
-    return _serialize_project(project, repo_paths.get(project.id))
+    repo_links = _repo_link_by_project_id(session, [project.id])
+    return _serialize_project(project, repo_links.get(project.id))
 
 
 def delete_project(session: Session, project_id: str) -> dict:
@@ -83,8 +84,8 @@ def delete_project(session: Session, project_id: str) -> dict:
     soft_delete(project)
     session.commit()
     session.refresh(project)
-    repo_paths = _relative_repo_path_by_project_id(session, [project.id])
-    return _serialize_project(project, repo_paths.get(project.id))
+    repo_links = _repo_link_by_project_id(session, [project.id])
+    return _serialize_project(project, repo_links.get(project.id))
 
 
 def list_project_children(session: Session, project_id: str, depth: int) -> list[dict]:
@@ -110,8 +111,8 @@ def list_project_children(session: Session, project_id: str, depth: int) -> list
         if remaining is not None:
             remaining -= 1
 
-    repo_paths = _relative_repo_path_by_project_id(session, [project.id for project in results])
-    return [_serialize_project(project, repo_paths.get(project.id)) for project in results]
+    repo_links = _repo_link_by_project_id(session, [project.id for project in results])
+    return [_serialize_project(project, repo_links.get(project.id)) for project in results]
 
 
 def create_subproject(session: Session, parent_project_id: str, payload: ProjectCreate) -> dict:
