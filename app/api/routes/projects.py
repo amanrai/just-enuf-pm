@@ -5,9 +5,9 @@ from app.db import get_session
 from app.schemas.comment import CommentRead
 from app.schemas.common import SoftDeleteResponse
 from app.schemas.project_property import ProjectPropertyRead
-from app.schemas.project import ProjectAttach, ProjectCreate, ProjectRead, ProjectUpdate
+from app.schemas.project import ProjectAttach, ProjectCreate, ProjectDeletedRead, ProjectRead, ProjectUpdate
 from app.schemas.project_repo_link import ProjectRepoLinkRead, ProjectRepoLinkUpsert
-from app.schemas.task import TaskCreate, TaskRead, TaskReorderRequest
+from app.schemas.task import TaskCreate, TaskDeletedRead, TaskRead, TaskReorderRequest
 from app.services import comments as comment_service
 from app.services import project_properties as property_service
 from app.services import project_repo_links as repo_link_service
@@ -25,6 +25,11 @@ def list_projects(session: Session = Depends(get_session)):
 @router.post("", response_model=ProjectRead, status_code=status.HTTP_201_CREATED)
 def create_project(payload: ProjectCreate, session: Session = Depends(get_session)):
     return project_service.create_project(session, payload)
+
+
+@router.get("/deleted", response_model=list[ProjectDeletedRead])
+def list_deleted_projects(session: Session = Depends(get_session)):
+    return project_service.list_deleted_projects(session)
 
 
 @router.get("/{project_id}", response_model=ProjectRead)
@@ -89,6 +94,11 @@ def upsert_project_repo_link(project_id: str, payload: ProjectRepoLinkUpsert, se
 @router.get("/{project_id}/tasks", response_model=list[TaskRead])
 def list_project_tasks(project_id: str, session: Session = Depends(get_session)):
     return task_service.list_tasks(session, project_id=project_id)
+
+
+@router.get("/{project_id}/tasks/deleted", response_model=list[TaskDeletedRead])
+def list_deleted_project_tasks(project_id: str, session: Session = Depends(get_session)):
+    return task_service.list_deleted_tasks_by_project(session, project_id)
 
 
 @router.post("/{project_id}/tasks", response_model=TaskRead, status_code=status.HTTP_201_CREATED)

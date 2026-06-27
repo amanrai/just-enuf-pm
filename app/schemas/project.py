@@ -35,5 +35,9 @@ class ProjectRead(APIModel):
     updated_at: datetime
 
 
+class ProjectDeletedRead(ProjectRead):
+    deleted_at: datetime
+
+
 class ProjectAttach(BaseModel):
     parent_project_id: str

@@ -55,6 +55,19 @@ def list_tasks(
     return list(session.scalars(active(stmt, Task)))
 
 
+def list_deleted_tasks_by_project(session: Session, project_id: str) -> list[Task]:
+    from app.services.projects import get_project_any
+
+    get_project_any(session, project_id)
+    stmt = (
+        select(Task)
+        .options(selectinload(Task.tags))
+        .where(Task.project_id == project_id, Task.is_deleted == 1)
+        .order_by(Task.deleted_at.desc(), Task.display_order, Task.created_at)
+    )
+    return list(session.scalars(stmt))
+
+
 def _next_display_order(session: Session, project_id: str | None, parent_task_id: str | None) -> int:
     stmt = select(func.max(Task.display_order))
     if project_id is not None:

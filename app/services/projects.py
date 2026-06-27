@@ -5,7 +5,7 @@ from app.models.project import Project
 from app.models.project_repo_link import ProjectRepoLink
 from app.schemas.project import ProjectCreate, ProjectUpdate
 from app.services.base import active, get_or_404, soft_delete
-from app.services.errors import ValidationError
+from app.services.errors import NotFoundError, ValidationError
 from app.services.task_types import clone_templates_for_project
 from app.services.utils import new_id
 
@@ -30,6 +30,7 @@ def _serialize_project(project: Project, repo_link: ProjectRepoLink | None = Non
         "created_by_instance_key": project.created_by_instance_key,
         "created_at": project.created_at,
         "updated_at": project.updated_at,
+        "deleted_at": project.deleted_at,
     }
 
 
@@ -37,6 +38,25 @@ def list_projects(session: Session) -> list[dict]:
     projects = list(session.scalars(active(select(Project).order_by(Project.created_at), Project)))
     repo_links = _repo_link_by_project_id(session, [project.id for project in projects])
     return [_serialize_project(project, repo_links.get(project.id)) for project in projects]
+
+
+def list_deleted_projects(session: Session) -> list[dict]:
+    projects = list(
+        session.scalars(
+            select(Project)
+            .where(Project.is_deleted == 1)
+            .order_by(Project.deleted_at.desc(), Project.created_at)
+        )
+    )
+    repo_links = _repo_link_by_project_id(session, [project.id for project in projects])
+    return [_serialize_project(project, repo_links.get(project.id)) for project in projects]
+
+
+def get_project_any(session: Session, project_id: str) -> Project:
+    project = session.scalar(select(Project).where(Project.id == project_id))
+    if project is None:
+        raise NotFoundError("Project not found")
+    return project
 
 
 def get_project(session: Session, project_id: str) -> Project:

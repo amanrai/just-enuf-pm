@@ -46,3 +46,7 @@ class TaskRead(APIModel):
     tags: list[TagRead]
     created_at: datetime
     updated_at: datetime
+
+
+class TaskDeletedRead(TaskRead):
+    deleted_at: datetime
