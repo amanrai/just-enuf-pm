@@ -1,4 +1,4 @@
-from sqlalchemy import CheckConstraint, ForeignKey, Integer, Text
+from sqlalchemy import CheckConstraint, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db import Base
@@ -9,7 +9,9 @@ class Comment(TimestampMixin, SoftDeleteMixin, Base):
     __tablename__ = "comments"
     __table_args__ = (
         CheckConstraint(
-            "(project_id IS NOT NULL AND task_id IS NULL) OR (project_id IS NULL AND task_id IS NOT NULL)",
+            "(project_id IS NOT NULL AND task_id IS NULL AND goal_checklist_item_id IS NULL) OR "
+            "(project_id IS NULL AND task_id IS NOT NULL AND goal_checklist_item_id IS NULL) OR "
+            "(project_id IS NULL AND task_id IS NULL AND goal_checklist_item_id IS NOT NULL)",
             name="ck_comment_single_target",
         ),
     )
@@ -17,6 +19,7 @@ class Comment(TimestampMixin, SoftDeleteMixin, Base):
     id: Mapped[str] = mapped_column(primary_key=True)
     project_id: Mapped[str | None] = mapped_column(ForeignKey("projects.id"), nullable=True)
     task_id: Mapped[str | None] = mapped_column(ForeignKey("tasks.id"), nullable=True)
+    goal_checklist_item_id: Mapped[str | None] = mapped_column(String, ForeignKey("goal_checklist_items.id"), nullable=True)
     parent_comment_id: Mapped[str | None] = mapped_column(ForeignKey("comments.id"), nullable=True)
     author_role: Mapped[str] = mapped_column(Text, nullable=False)
     author_instance_key: Mapped[str] = mapped_column(Text, nullable=False)

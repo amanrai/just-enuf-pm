@@ -12,6 +12,7 @@ class CommentCreate(BaseModel):
     body_format: str = "markdown"
     project_id: str | None = None
     task_id: str | None = None
+    goal_checklist_item_id: str | None = None
     parent_comment_id: str | None = None
 
 
@@ -27,6 +28,7 @@ class CommentRead(APIModel):
     body_format: str
     project_id: str | None
     task_id: str | None
+    goal_checklist_item_id: str | None
     parent_comment_id: str | None
     is_human_comment: int
     created_at: datetime
