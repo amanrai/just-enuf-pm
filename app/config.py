@@ -6,6 +6,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     app_name: str = "PM System"
+    app_version: str = "0.1.0"
     app_env: str = "development"
     api_prefix: str = "/api"
     sqlite_path: Path = Path("data/pmsystem.db")

@@ -128,6 +128,8 @@ uvicorn app.main:app --reload
   - deletes the SQLite database file and recreates schema plus seed data
 - `python -m app.scripts.seed_defaults`
   - reapplies seed data without dropping the database
+- `python -m app.scripts.export_openapi`
+  - writes the source revision's OpenAPI snapshot to `docs/openapi.json`
 
 ## Seeded Defaults
 
@@ -142,7 +144,9 @@ When a project is created, these defaults are copied into that project as projec
 ## Documentation
 
 - [Architecture](docs/architecture.md)
-- [API Notes](docs/api.md)
+- [API reference and contract](docs/api.md)
+- [API evolution policy](docs/api-evolution.md)
+- [OpenAPI snapshot](docs/openapi.json)
 - [Product Decisions](docs/decisions.md)
 
 Just-Enuf-PM is also intentionally simple enough that you can vibe-code a personal Things 3 style app on top of it in about 30 minutes, and then keep growing that app into a much larger set of use cases over time.

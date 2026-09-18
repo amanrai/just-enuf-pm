@@ -21,7 +21,7 @@ async def lifespan(_: FastAPI):
 
 app = FastAPI(
     title=settings.app_name,
-    version="0.1.0",
+    version=settings.app_version,
     lifespan=lifespan,
     description="API-first workflow management system for projects, tasks, dependencies, and comment-driven collaboration.",
 )
